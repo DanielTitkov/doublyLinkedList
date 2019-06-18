@@ -9,8 +9,7 @@ import (
 // List
 
 type List struct {
-    first *Item
-    last *Item
+    first, last *Item
 }
 
 
@@ -24,12 +23,18 @@ func (self *List) Last() *Item {
 }
 
 
-func (self *List) Len() int {
-    i, len := self.first, 0
+func (self *List) Map(f func(i *Item)) {
+    i := self.first
     for i != nil {
-        len++
+        f(i)
         i = i.next
     }
+}
+
+
+func (self *List) Len() int {
+    len := 0
+    self.Map(func(_ *Item) {len++})
     return len
 }
 
@@ -58,13 +63,17 @@ func (self *List) PushBack(value interface{}) {
 }
 
 
+func (self *List) PrintValues() {
+    self.Map(func (i *Item) {fmt.Println(i.Value())})
+}
+
+
 // Item
 
 type Item struct {
     value interface{}
     list *List
-    prev *Item
-    next *Item
+    prev, next *Item
 }
 
 
@@ -98,25 +107,11 @@ func (self *Item) Remove() {
 
 
 func main() {
-    i1 := Item{value: "foo"}
-    i2 := Item{value: "bar", prev:  &i1}
-    i3 := Item{value: "spam", prev: &i2}
-    i1.next = &i2
-    i2.next = &i3
-
     l := List{}
 
-    // fmt.Println(l.first.value, l.last.value)
-    l.PushBack("FOO")
-    fmt.Println(l.first.value, l.last.value)
-    fmt.Println(l.Len())
-    l.PushBack("BAR")
-    fmt.Println(l.first.value, l.last.value)
-    fmt.Println(l.Len())
+    for _, v := range([]string{"Who", "is", "John", "Galt", "?"}) {
+        l.PushBack(v)
+    }
 
-    // fmt.Println(i1, i2, i3)
-    // fmt.Println(l)
-    // fmt.Println(i1.Next())
-    // fmt.Println(i2.Prev())
-    // fmt.Println(l.Len())
+    l.PrintValues()
 }

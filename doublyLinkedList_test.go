@@ -1,11 +1,7 @@
 package main
 
 
-import (
-    "testing"
-    _ "fmt"
-)
-
+import "testing"
 
 
 func TestItemValue(t *testing.T) {
@@ -92,6 +88,6 @@ func TestRemovePenultItem(t *testing.T) {
     l.PushBack("2")
     l.Last().Remove()
     if l.First() != l.Last() || l.Len() != 1 {
-
+        t.Errorf("expected one item in list, got %v, %v, len %v", l.First(), l.Last(), l.Len())
     }
 }
