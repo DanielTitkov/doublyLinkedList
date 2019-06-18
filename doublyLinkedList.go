@@ -35,7 +35,7 @@ func (self *List) Len() int {
 
 
 func (self *List) PushFront(value interface{}) {
-    newFirst := &Item{value: value}
+    newFirst := &Item{value: value, list: self}
     if oldFirst := self.first; oldFirst != nil {
         newFirst.next = oldFirst
         oldFirst.prev = newFirst
@@ -47,7 +47,7 @@ func (self *List) PushFront(value interface{}) {
 
 
 func (self *List) PushBack(value interface{}) {
-    newLast := &Item{value: value}
+    newLast := &Item{value: value, list: self}
     if oldLast := self.last; oldLast != nil {
         newLast.prev = oldLast
         oldLast.next = newLast
@@ -62,6 +62,7 @@ func (self *List) PushBack(value interface{}) {
 
 type Item struct {
     value interface{}
+    list *List
     prev *Item
     next *Item
 }
@@ -79,6 +80,20 @@ func (self *Item) Next() *Item {
 
 func (self *Item) Prev() *Item {
     return self.prev
+}
+
+
+func (self *Item) Remove() {
+    if self.prev == nil {
+        self.list.first = self.next
+    } else {
+        self.prev.next = self.next
+    }
+    if self.next == nil {
+        self.list.last = self.prev
+    } else {
+        self.next.prev = self.prev
+    }
 }
 
 
